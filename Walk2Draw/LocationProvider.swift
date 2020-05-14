@@ -35,6 +35,8 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
         locationManager.requestWhenInUseAuthorization()
     }
     
+    // MARK: Delegates
+    
     func locationManager(_ manager: CLLocationManager,
                          didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
@@ -67,16 +69,20 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
         updateHandler(location, nil)
     }
     
+    // MARK: UI action handlers
+    
     func start() {
         // start tracking the device location
         locationManager.startUpdatingLocation()
         locationsUpdating = true
+        locationManager.allowsBackgroundLocationUpdates = true
     }
 
     func stop() {
         // stop tracking the device location
         locationManager.stopUpdatingLocation()
         locationsUpdating = false
+        locationManager.allowsBackgroundLocationUpdates = false
     }
 
 }

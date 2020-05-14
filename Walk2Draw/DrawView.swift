@@ -10,18 +10,19 @@ import UIKit
 import MapKit
 
 class DrawView: UIView {
-
+    
     let mapView: MKMapView
     let clearButton: UIButton
     let startStopButton: UIButton
     let shareButton: UIButton
-
+    
     override init(frame: CGRect) {
+        
         mapView = MKMapView()
-
+        
         // activate the blue circle to show the device location on the map
         mapView.showsUserLocation = true
-
+        
         // init the buttons
         clearButton = UIButton(type: .system)
         clearButton.setTitle("Clear", for: .normal)
@@ -34,10 +35,12 @@ class DrawView: UIView {
         
         super.init(frame: frame)
         
-        backgroundColor = UIColor.white     // set background to a nice, opaque color
+        // set background to a nice, opaque color
+        backgroundColor = UIColor.white
         
-        mapView.delegate = self     // set up to draw an overlay of locations
-
+        // set up to draw an overlay of locations
+        mapView.delegate = self
+        
         // create a horizontal stack (default) for the three buttons
         let buttonStackView = UIStackView(arrangedSubviews: [clearButton, startStopButton, shareButton])
         buttonStackView.distribution = .fillEqually
@@ -46,20 +49,19 @@ class DrawView: UIView {
         let stackView = UIStackView(arrangedSubviews: [mapView, buttonStackView])
         stackView.axis = .vertical
         
-        // add as a subview
         addSubview(stackView)
         
         // Tell UIKit that we want to activate the needed constraints ourselves,
         // rather than use the auto resizing mask of the stack view.
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        // set the stack edges to the view edges, except for the bottom which has to leave room for
-        // the home indicator on recent iPhones.
+        // set the stack edges to the view edges, except for the bottom which has to
+        // leave room for the home indicator on recent iPhones.
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
     }
@@ -67,7 +69,7 @@ class DrawView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     func addOverlay(with locations: [CLLocation]) {
         // remove all existing overlays on the map
         mapView.removeOverlays(mapView.overlays)
@@ -75,8 +77,9 @@ class DrawView: UIView {
         // map the locations to an array of CLLocation coordinates
         let coordinates = locations.map { $0.coordinate }
         
-        // create a polyline overlay from the coordinates then add it as a map
-        let overlay = MKPolyline(coordinates: coordinates, count: coordinates.count)
+        // create a polyline overlay from the coordinates then add it to the map
+        let overlay = MKPolyline(coordinates: coordinates,
+                                 count: coordinates.count)
         mapView.addOverlay(overlay)
         
         // set a region on the map to include at least most of the locations
@@ -102,12 +105,11 @@ class DrawView: UIView {
 // MARK: - Delegates
 
 extension DrawView : MKMapViewDelegate {
-
+    
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        // if this is a polyline we created from locations..
+        // if this is a polyline we created from locations
         if overlay is MKPolyline {
-            // get a renderer for the polyline path & set its attributes
-            let renderer = MKPolygonRenderer(overlay: overlay)
+            let renderer = MKPolylineRenderer(overlay: overlay)
             renderer.strokeColor = UIColor.red
             renderer.lineWidth = 3
             return renderer
@@ -116,4 +118,5 @@ extension DrawView : MKMapViewDelegate {
             return MKOverlayRenderer(overlay: overlay)
         }
     }
+    
 }
