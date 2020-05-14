@@ -3,27 +3,32 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		F1452D46246A1DB100EE85B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1452D45246A1DB100EE85B3 /* AppDelegate.swift */; };
 		F1452D48246A1DB100EE85B3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1452D47246A1DB100EE85B3 /* SceneDelegate.swift */; };
-		F1452D4A246A1DB100EE85B3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1452D49246A1DB100EE85B3 /* ViewController.swift */; };
-		F1452D4D246A1DB100EE85B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1452D4B246A1DB100EE85B3 /* Main.storyboard */; };
 		F1452D4F246A1DB500EE85B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1452D4E246A1DB500EE85B3 /* Assets.xcassets */; };
 		F1452D52246A1DB500EE85B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1452D50246A1DB500EE85B3 /* LaunchScreen.storyboard */; };
+		F1452D5D246B2DE800EE85B3 /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1452D5C246B2DE800EE85B3 /* LocationProvider.swift */; };
+		F1452D5F246B335A00EE85B3 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1452D5E246B335900EE85B3 /* DrawView.swift */; };
+		F1452D62246B3A9600EE85B3 /* DrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1452D61246B3A9600EE85B3 /* DrawViewController.swift */; };
+		F15E854C246C836D009E1992 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F15E854B246C836D009E1992 /* README.md */; };
+		F1948760246CAB1700598172 /* LogStore in Frameworks */ = {isa = PBXBuildFile; productRef = F194875F246CAB1700598172 /* LogStore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F1452D42246A1DB100EE85B3 /* Walk2Draw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Walk2Draw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1452D45246A1DB100EE85B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1452D47246A1DB100EE85B3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F1452D49246A1DB100EE85B3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		F1452D4C246A1DB100EE85B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F1452D4E246A1DB500EE85B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F1452D51246A1DB500EE85B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F1452D53246A1DB500EE85B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1452D5C246B2DE800EE85B3 /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
+		F1452D5E246B335900EE85B3 /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
+		F1452D61246B3A9600EE85B3 /* DrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawViewController.swift; sourceTree = "<group>"; };
+		F15E854B246C836D009E1992 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1948760246CAB1700598172 /* LogStore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +46,7 @@
 		F1452D39246A1DB100EE85B3 = {
 			isa = PBXGroup;
 			children = (
+				F15E854B246C836D009E1992 /* README.md */,
 				F1452D44246A1DB100EE85B3 /* Walk2Draw */,
 				F1452D43246A1DB100EE85B3 /* Products */,
 			);
@@ -58,8 +65,9 @@
 			children = (
 				F1452D45246A1DB100EE85B3 /* AppDelegate.swift */,
 				F1452D47246A1DB100EE85B3 /* SceneDelegate.swift */,
-				F1452D49246A1DB100EE85B3 /* ViewController.swift */,
-				F1452D4B246A1DB100EE85B3 /* Main.storyboard */,
+				F1452D61246B3A9600EE85B3 /* DrawViewController.swift */,
+				F1452D5E246B335900EE85B3 /* DrawView.swift */,
+				F1452D5C246B2DE800EE85B3 /* LocationProvider.swift */,
 				F1452D4E246A1DB500EE85B3 /* Assets.xcassets */,
 				F1452D50246A1DB500EE85B3 /* LaunchScreen.storyboard */,
 				F1452D53246A1DB500EE85B3 /* Info.plist */,
@@ -83,6 +91,9 @@
 			dependencies = (
 			);
 			name = Walk2Draw;
+			packageProductDependencies = (
+				F194875F246CAB1700598172 /* LogStore */,
+			);
 			productName = Walk2Draw;
 			productReference = F1452D42246A1DB100EE85B3 /* Walk2Draw.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +122,9 @@
 				Base,
 			);
 			mainGroup = F1452D39246A1DB100EE85B3;
+			packageReferences = (
+				F194875E246CAB1700598172 /* XCRemoteSwiftPackageReference "LogStore" */,
+			);
 			productRefGroup = F1452D43246A1DB100EE85B3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -125,9 +139,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F15E854C246C836D009E1992 /* README.md in Resources */,
 				F1452D52246A1DB500EE85B3 /* LaunchScreen.storyboard in Resources */,
 				F1452D4F246A1DB500EE85B3 /* Assets.xcassets in Resources */,
-				F1452D4D246A1DB100EE85B3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +152,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1452D4A246A1DB100EE85B3 /* ViewController.swift in Sources */,
+				F1452D62246B3A9600EE85B3 /* DrawViewController.swift in Sources */,
+				F1452D5F246B335A00EE85B3 /* DrawView.swift in Sources */,
+				F1452D5D246B2DE800EE85B3 /* LocationProvider.swift in Sources */,
 				F1452D46246A1DB100EE85B3 /* AppDelegate.swift in Sources */,
 				F1452D48246A1DB100EE85B3 /* SceneDelegate.swift in Sources */,
 			);
@@ -147,14 +163,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		F1452D4B246A1DB100EE85B3 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F1452D4C246A1DB100EE85B3 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		F1452D50246A1DB500EE85B3 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -287,6 +295,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Q22UWZ3RWC;
 				INFOPLIST_FILE = Walk2Draw/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +314,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Q22UWZ3RWC;
 				INFOPLIST_FILE = Walk2Draw/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F194875E246CAB1700598172 /* XCRemoteSwiftPackageReference "LogStore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sargapman/LogStore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F194875F246CAB1700598172 /* LogStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F194875E246CAB1700598172 /* XCRemoteSwiftPackageReference "LogStore" */;
+			productName = LogStore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F1452D3A246A1DB100EE85B3 /* Project object */;
 }

@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "LogStore",
+        "repositoryURL": "https://github.com/sargapman/LogStore",
+        "state": {
+          "branch": null,
+          "revision": "b09689d2f381ba0fb96d2325d02697127ea39572",
+          "version": "2.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

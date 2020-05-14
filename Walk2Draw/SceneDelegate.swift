@@ -7,17 +7,31 @@
 //
 
 import UIKit
+import LogStore
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var trigger: LogTrigger?
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        // try to unwrap the scene variable
+        guard let scene = (scene as? UIWindowScene) else { return }
+        
+        // create a new window from the scene & define the initial VC to be a DrawView
+        window = UIWindow(windowScene: scene)
+        window?.rootViewController = DrawViewController()
+        
+        // make this window visible and the key window to receive all non-touch related events
+        window?.makeKeyAndVisible()
+
+        #if DEBUG       // don’t accidentally ship a version with the debug gesture activated
+        
+        // setup the log store trigger
+        trigger = LogTrigger(in: window)
+
+        #endif
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -47,7 +61,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
 
 }
 
