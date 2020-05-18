@@ -16,6 +16,7 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
     private let updateHandler: (CLLocation?, Error?) -> Void
     
     var locationsUpdating = false    // track state of getting location updates
+    var locationPermissionDenied = false
     
     init(updateHandler: @escaping (CLLocation?, Error?) -> Void) {
         // assign a new instance for this class property
@@ -43,16 +44,9 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
         case .authorizedWhenInUse:
             printLog("authorization success")
         case .denied:
-            printLog("authorization denied!")
-            /*
-             Once the user has denied access to the location, the app can’t ask again
-             and the location manager always delivers the status denied. In this case the
-             app could show an alert that it cannot function properly and ask if the user
-             would like to change the permission in the settings of the app. We can even
-             redirect the users to the settings with the following code:
-                    let settingsURL = URL(string: UIApplication.openSettingsURLString)!
-                    UIApplication.shared.open(settingsURL)
-            */
+            printLog("authorization denied!")            
+            locationPermissionDenied = true
+            
         default:
             break
         }
