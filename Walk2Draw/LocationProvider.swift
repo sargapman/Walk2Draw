@@ -43,8 +43,10 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
         switch status {
         case .authorizedWhenInUse:
             printLog("authorization success")
+            locationPermissionDenied = false
+            
         case .denied:
-            printLog("authorization denied!")            
+            printLog("authorization denied!")
             locationPermissionDenied = true
             
         default:

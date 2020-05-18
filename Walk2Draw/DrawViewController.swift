@@ -72,8 +72,15 @@ class DrawViewController: UIViewController {
             sender.setTitle("Start", for: .normal)
             
         } else {
-            locationProvider?.start()
-            sender.setTitle("Stop", for: .normal)
+
+            // permission to get locations?
+            if locationProvider?.locationPermissionDenied ?? false {
+                requestLocationPermission()
+                
+            } else {
+                locationProvider?.start()
+                sender.setTitle("Stop", for: .normal)
+            }
         }
     }
     
@@ -155,6 +162,7 @@ class DrawViewController: UIViewController {
         let okAction = UIAlertAction(title: "Yes", style: .default, handler: {_ in
             printLog("OK tapped")
 
+            // present the Settings app
             let settingsURL = URL(string: UIApplication.openSettingsURLString)!
             UIApplication.shared.open(settingsURL)
         })
