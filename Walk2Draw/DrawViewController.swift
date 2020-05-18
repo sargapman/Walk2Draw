@@ -53,6 +53,16 @@ class DrawViewController: UIViewController {
         })
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        printLog("viewDidAppear")
+
+        if locationProvider?.locationPermissionDenied ?? false {
+            requestLocationPermission()     // TODO: will this be an infinite loop?
+        }
+    }
+    
     // MARK: UI action handlers
 
     @objc func startStop(_ sender: UIButton) {
@@ -62,8 +72,15 @@ class DrawViewController: UIViewController {
             sender.setTitle("Start", for: .normal)
             
         } else {
-            locationProvider?.start()
-            sender.setTitle("Stop", for: .normal)
+
+            // permission to get locations?
+            if locationProvider?.locationPermissionDenied ?? false {
+                requestLocationPermission()
+                
+            } else {
+                locationProvider?.start()
+                sender.setTitle("Stop", for: .normal)
+            }
         }
     }
     
@@ -123,6 +140,45 @@ class DrawViewController: UIViewController {
         UIGraphicsEndImageContext()
         
         return image
+    }
+
+    
+    /*
+     Once the user has denied access to the location, the app can’t ask again
+     and the location manager always delivers the status denied. In this case the
+     app could show an alert that it cannot function properly and ask if the user
+     would like to change the permission in the settings of the app. We can even
+     redirect the users to the settings with the following code:
+            let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+            UIApplication.shared.open(settingsURL)
+    */
+
+    public func requestLocationPermission() {
+        
+        // create & present alert with a message, Cancel and GoToSettings buttons
+        let infoMsg = "Location tracking is not enabled for this app so it can not do much for you.\nWould you like to allow this app to know where you are?"
+        let alertController = UIAlertController(title: "Location tracking permission denied", message: infoMsg, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Yes", style: .default, handler: {_ in
+            printLog("OK tapped")
+
+            // present the Settings app
+            let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+            UIApplication.shared.open(settingsURL)
+        })
+        alertController.addAction(okAction)
+
+        let cancelAction = UIAlertAction(title: "No", style: .cancel, handler: {_ in
+            printLog("Cancel tapped")
+        })
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+
+        // display the alert
+        
+        // respond to user action
+        
     }
     
 }
