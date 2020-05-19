@@ -14,7 +14,10 @@ import MapKit
 class DrawViewController: UIViewController {
     
     private var locationProvider: LocationProvider? = nil
-    private var locations: [CLLocation] = []    // array of reported locations
+    private var locations: [CLLocation] = []    // array of reported locations in a segment
+    private var segments: [[CLLocation]] = []   // array of segments comprising a journey
+    private var currentSegment = 0
+    
     private var contentView: DrawView {
         view as! DrawView
     }
@@ -45,11 +48,13 @@ class DrawViewController: UIViewController {
             // for testing log the location
             // printLog("location: \(location))")
 
-            // add this location to the array
-            self.locations.append(location)
+            // add this location to the array of the current segment
+            self.segments[self.currentSegment].append(location)
             
-            // add an overlay with the locations to the map
-            (self.view as? DrawView)?.addOverlay(with: self.locations)
+            // add an overlay with the locations in each segment of the journey
+            for segment in self.segments {
+                (self.view as? DrawView)?.addOverlay(with: segment)
+            }
         })
     }
     
@@ -59,7 +64,7 @@ class DrawViewController: UIViewController {
         printLog("viewDidAppear")
 
         if locationProvider?.locationPermissionDenied ?? false {
-            requestLocationPermission()     // TODO: will this be an infinite loop?
+            requestLocationPermission()
         }
     }
     
@@ -71,6 +76,9 @@ class DrawViewController: UIViewController {
             locationProvider?.stop()
             sender.setTitle("Start", for: .normal)
             
+            // prepare for an additional segment
+            currentSegment += 1
+            
         } else {
 
             // permission to get locations?
@@ -78,6 +86,10 @@ class DrawViewController: UIViewController {
                 requestLocationPermission()
                 
             } else {
+                // add a new segment to the journey
+                locations.removeAll()
+                segments.append(locations)
+
                 locationProvider?.start()
                 sender.setTitle("Stop", for: .normal)
             }
@@ -87,14 +99,19 @@ class DrawViewController: UIViewController {
     @objc func clear(_ sender: UIButton) {
         // clear the locations array
         locations.removeAll()
+        segments.removeAll()
+        currentSegment = 0
         
+        // remove all existing overlays on the map
+        contentView.mapView.removeOverlays(contentView.mapView.overlays)
+
         // clear the map overlays
         contentView.addOverlay(with: locations)
     }
     
     @objc func share(_ sender: UIButton) {
         // anything to see here?
-        if locations.isEmpty { return }
+        if currentSegment == 0 && locations.isEmpty { return }
         
         let options = MKMapSnapshotter.Options()
         options.region = contentView.mapView.region
@@ -106,53 +123,58 @@ class DrawViewController: UIViewController {
             
             guard let snapshot = snapshot else { return }
             
-            let image = self.imageByAddingPath(with: self.locations, to: snapshot)
-            
+            let image = self.imageByAddingSegments(with: self.segments, to: snapshot)
+
             let activity = UIActivityViewController(activityItems: [image, "#walk2draw"], applicationActivities: nil)
             self.present(activity, animated: true, completion: nil)
         }
     }
     
-    func imageByAddingPath(with locations: [CLLocation],
-                           to snapshot: MKMapSnapshotter.Snapshot) -> UIImage {
+    func imageByAddingSegments(with segments: [[CLLocation]],
+                               to snapshot: MKMapSnapshotter.Snapshot) -> UIImage {
         
+        // create a new image context that will be filled with bezier paths
         UIGraphicsBeginImageContextWithOptions(snapshot.image.size, true, 0.0)
         
         snapshot.image.draw(at: CGPoint(x: 0, y: 0))
-        
         let bezierPath = UIBezierPath()
-        guard let firstCoordinate = locations.first?.coordinate else { fatalError() }
-        
-        let firstPoint = snapshot.point(for: firstCoordinate)
-        bezierPath.move(to: firstPoint)
-        
-        for location in locations.dropFirst() {
-            let point = snapshot.point(for: location.coordinate)
-            bezierPath.addLine(to: point)
+
+        // for each collection of points in each segment
+        for locations in segments {
+            // get the start point of the path
+            guard let firstCoordinate = locations.first?.coordinate else { fatalError() }
+            
+            
+            // begin the path at that point
+            let firstPoint = snapshot.point(for: firstCoordinate)
+            bezierPath.move(to: firstPoint)
+            
+            // for each remaining location draw a line from the prior location
+            for location in locations.dropFirst() {
+                let point = snapshot.point(for: location.coordinate)
+                bezierPath.addLine(to: point)
+            }
         }
         
+        // set some attributes for the path
         UIColor.red.setStroke()
         bezierPath.lineWidth = 2
         bezierPath.stroke()
-        
+
+        // get an image from the path
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else { fatalError() }
         
         UIGraphicsEndImageContext()
         
         return image
     }
-
     
     /*
      Once the user has denied access to the location, the app can’t ask again
      and the location manager always delivers the status denied. In this case the
-     app could show an alert that it cannot function properly and ask if the user
-     would like to change the permission in the settings of the app. We can even
-     redirect the users to the settings with the following code:
-            let settingsURL = URL(string: UIApplication.openSettingsURLString)!
-            UIApplication.shared.open(settingsURL)
+     app shows an alert that it cannot function properly and asks if the user
+     would like to change the permission in the settings of the app.
     */
-
     public func requestLocationPermission() {
         
         // create & present alert with a message, Cancel and GoToSettings buttons
@@ -173,12 +195,8 @@ class DrawViewController: UIViewController {
         })
         alertController.addAction(cancelAction)
         
-        present(alertController, animated: true, completion: nil)
-
         // display the alert
-        
-        // respond to user action
-        
+        present(alertController, animated: true, completion: nil)
     }
     
 }

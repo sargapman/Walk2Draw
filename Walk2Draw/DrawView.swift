@@ -71,9 +71,6 @@ class DrawView: UIView {
     }
     
     func addOverlay(with locations: [CLLocation]) {
-        // remove all existing overlays on the map
-        mapView.removeOverlays(mapView.overlays)
-        
         // map the locations to an array of CLLocation coordinates
         let coordinates = locations.map { $0.coordinate }
         
