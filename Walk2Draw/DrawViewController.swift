@@ -16,7 +16,7 @@ class DrawViewController: UIViewController {
     private var locationProvider: LocationProvider? = nil
     private var locations: [CLLocation] = []    // array of reported locations in a segment
     private var segments: [[CLLocation]] = []   // array of segments comprising a journey
-    private var currentSegment = 0
+    // private var currentSegment = 0
     
     private var contentView: DrawView {
         view as! DrawView
@@ -39,6 +39,14 @@ class DrawViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /*
+        let redPinImage = UIImage(systemName: "mappin")?.withTintColor(.red)
+        let greenPinImage = UIImage(systemName: "mappin")?.withTintColor(.green)
+        contentView.shareButton.setImage(greenPinImage, for: .normal)
+        contentView.clearButton.setImage(redPinImage, for: .normal)
+         */
+
+        
         // assign a new Location provider with an update handler in this closure
         locationProvider = LocationProvider(updateHandler: {
             [unowned self] location, error in
@@ -49,7 +57,7 @@ class DrawViewController: UIViewController {
             // printLog("location: \(location))")
 
             // add this location to the array of the current segment
-            self.segments[self.currentSegment].append(location)
+            self.segments[(self.segments.count-1)].append(location)
             
             // add an overlay with the locations in each segment of the journey
             for segment in self.segments {
@@ -73,15 +81,26 @@ class DrawViewController: UIViewController {
     @objc func startStop(_ sender: UIButton) {
         // toggle the location updating & the start / stop button text
         if locationProvider?.locationsUpdating ?? false {
+            // Stop was tapped
+
+            // add annotation for stop location
+            let currentSegment = segments.count - 1
+            if segments[currentSegment].count > 0 {
+                let lastLocation = segments[currentSegment].last
+                // annot.coordinate = segments[currentSegment][0].coordinate
+                let annot = MKPointAnnotation()
+                annot.coordinate = lastLocation!.coordinate
+                annot.title = "Stop"       // used to identify this annotation in delegate
+                contentView.mapView.addAnnotation(annot)
+            }
+            
             locationProvider?.stop()
             sender.setTitle("Start", for: .normal)
-            
-            // prepare for an additional segment
-            currentSegment += 1
-            
-        } else {
 
-            // permission to get locations?
+        } else {
+            // Start was tapped
+
+            // does the app have permission to get locations?
             if locationProvider?.locationPermissionDenied ?? false {
                 requestLocationPermission()
                 
@@ -97,13 +116,15 @@ class DrawViewController: UIViewController {
     }
     
     @objc func clear(_ sender: UIButton) {
-        // clear the locations array
+        // clear the segments & locations array
         locations.removeAll()
         segments.removeAll()
-        currentSegment = 0
         
         // remove all existing overlays on the map
         contentView.mapView.removeOverlays(contentView.mapView.overlays)
+        
+        // remove all existing annotations on the map
+        contentView.mapView.removeAnnotations(contentView.mapView.annotations)
 
         // clear the map overlays
         contentView.addOverlay(with: locations)
@@ -111,7 +132,7 @@ class DrawViewController: UIViewController {
     
     @objc func share(_ sender: UIButton) {
         // anything to see here?
-        if currentSegment == 0 && locations.isEmpty { return }
+        if segments.count == 0 && locations.isEmpty { return }
         
         let options = MKMapSnapshotter.Options()
         options.region = contentView.mapView.region
@@ -125,7 +146,12 @@ class DrawViewController: UIViewController {
             
             let image = self.imageByAddingSegments(with: self.segments, to: snapshot)
 
-            let activity = UIActivityViewController(activityItems: [image, "#walk2draw"], applicationActivities: nil)
+            //let activity = UIActivityViewController(activityItems: [image, "#walk2draw"], applicationActivities: nil)
+            let activity = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+
+            // ensure this works properly on iPad
+            activity.popoverPresentationController?.sourceView = sender
+            
             self.present(activity, animated: true, completion: nil)
         }
     }

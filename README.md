@@ -19,3 +19,4 @@ Tap the Clear button to clear the tracked locations.
 ### Chapter 2 Exercises
 1. Add error handling to the code. For example you could present an alert to the users in case they don’t authorize the use of the device location.
 2. Change the code so the user can "lift" the "pencil" and continue the drawing at another place.
+2.1. Add start and stop markers on each segment.

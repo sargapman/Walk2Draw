@@ -79,6 +79,14 @@ class DrawView: UIView {
                                  count: coordinates.count)
         mapView.addOverlay(overlay)
         
+        // add annotation for start location
+        if coordinates.count == 1 {
+            let annot = MKPointAnnotation()
+            annot.coordinate = coordinates[0]
+            annot.title = "Start"       // used to identify this annotation in delegate
+            mapView.addAnnotation(annot)
+        }
+        
         // set a region on the map to include at least most of the locations
         if let lastLocation = locations.last {
             // find the max distance of all locations from the last location
@@ -103,8 +111,8 @@ class DrawView: UIView {
 
 extension DrawView : MKMapViewDelegate {
     
+    /* Provide a customized renderer for the polyline that was created from locations */
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        // if this is a polyline we created from locations
         if overlay is MKPolyline {
             let renderer = MKPolylineRenderer(overlay: overlay)
             renderer.strokeColor = UIColor.red
@@ -116,4 +124,23 @@ extension DrawView : MKMapViewDelegate {
         }
     }
     
+    /* Display the start & stop annotations for the segment */
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let id = MKMapViewDefaultAnnotationViewReuseIdentifier
+        if let v = mapView.dequeueReusableAnnotationView(withIdentifier: id, for: annotation) as? MKMarkerAnnotationView {
+            if let t = annotation.title {
+                if t == "Start" {
+                    v.titleVisibility = .hidden
+                    v.markerTintColor = .green
+                    return v
+                    
+                } else if t == "Stop" {
+                    v.titleVisibility = .hidden
+                    v.markerTintColor = .red
+                    return v
+                }
+            }
+        }
+        return nil
+    }
 }
