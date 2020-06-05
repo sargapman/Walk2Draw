@@ -70,7 +70,7 @@ class DrawView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addOverlay(with locations: [CLLocation]) {
+    func addOverlay(with locations: [CLLocation], segmentsCount: Int) {
         // map the locations to an array of CLLocation coordinates
         let coordinates = locations.map { $0.coordinate }
         
@@ -84,6 +84,7 @@ class DrawView: UIView {
             let annot = MKPointAnnotation()
             annot.coordinate = coordinates[0]
             annot.title = "Start"       // used to identify this annotation in delegate
+            annot.subtitle = "Segment \(segmentsCount)"
             mapView.addAnnotation(annot)
         }
         

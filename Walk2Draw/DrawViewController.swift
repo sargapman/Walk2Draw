@@ -28,9 +28,7 @@ class DrawViewController: UIViewController {
         
         // hook up the buttons to their handlers
         contentView.startStopButton.addTarget(self, action: #selector(startStop(_:)), for: .touchUpInside)
-
         contentView.clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)
-        
         contentView.shareButton.addTarget(self, action: #selector(share(_:)), for: .touchUpInside)
 
         view = contentView
@@ -61,7 +59,7 @@ class DrawViewController: UIViewController {
             
             // add an overlay with the locations in each segment of the journey
             for segment in self.segments {
-                (self.view as? DrawView)?.addOverlay(with: segment)
+                (self.view as? DrawView)?.addOverlay(with: segment, segmentsCount: self.segments.count)
             }
         })
     }
@@ -87,15 +85,21 @@ class DrawViewController: UIViewController {
             let currentSegment = segments.count - 1
             if segments[currentSegment].count > 0 {
                 let lastLocation = segments[currentSegment].last
-                // annot.coordinate = segments[currentSegment][0].coordinate
+
                 let annot = MKPointAnnotation()
                 annot.coordinate = lastLocation!.coordinate
                 annot.title = "Stop"       // used to identify this annotation in delegate
+                annot.subtitle = "Segment \(segments.count)"
                 contentView.mapView.addAnnotation(annot)
             }
             
             locationProvider?.stop()
+            
+            // set the button title
             sender.setTitle("Start", for: .normal)
+            
+            // enable the Clear button
+            contentView.clearButton.isEnabled = true
 
         } else {
             // Start was tapped
@@ -110,7 +114,14 @@ class DrawViewController: UIViewController {
                 segments.append(locations)
 
                 locationProvider?.start()
+
+                // add annotation for start location when the first one arrives
+                
+                // set the button title
                 sender.setTitle("Stop", for: .normal)
+                
+                // disable the Clear button
+                contentView.clearButton.isEnabled = false
             }
         }
     }
@@ -127,7 +138,7 @@ class DrawViewController: UIViewController {
         contentView.mapView.removeAnnotations(contentView.mapView.annotations)
 
         // clear the map overlays
-        contentView.addOverlay(with: locations)
+        contentView.addOverlay(with: locations, segmentsCount: 0)
     }
     
     @objc func share(_ sender: UIButton) {
@@ -146,8 +157,8 @@ class DrawViewController: UIViewController {
             
             let image = self.imageByAddingSegments(with: self.segments, to: snapshot)
 
-            //let activity = UIActivityViewController(activityItems: [image, "#walk2draw"], applicationActivities: nil)
-            let activity = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+            let activity = UIActivityViewController(activityItems: [image, "#walk2draw"], applicationActivities: nil)
+            // let activity = UIActivityViewController(activityItems: [image], applicationActivities: nil)
 
             // ensure this works properly on iPad
             activity.popoverPresentationController?.sourceView = sender
@@ -185,6 +196,8 @@ class DrawViewController: UIViewController {
         // set some attributes for the path
         UIColor.red.setStroke()
         bezierPath.lineWidth = 2
+        
+        // draw the path
         bezierPath.stroke()
 
         // get an image from the path
@@ -199,7 +212,7 @@ class DrawViewController: UIViewController {
      Once the user has denied access to the location, the app can’t ask again
      and the location manager always delivers the status denied. In this case the
      app shows an alert that it cannot function properly and asks if the user
-     would like to change the permission in the settings of the app.
+     would like to change the permission in the Settings app.
     */
     public func requestLocationPermission() {
         

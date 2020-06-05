@@ -30,7 +30,7 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
         
         // this class is the delegate
         locationManager.delegate = self
-        locationManager.distanceFilter = 1      // get notified when the device has moved 1 meter
+        locationManager.distanceFilter = 3      // get notified when the device has moved 3 meters
         
         // ask for permission to get the device location
         locationManager.requestWhenInUseAuthorization()
