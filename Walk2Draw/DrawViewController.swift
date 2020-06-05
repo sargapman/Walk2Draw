@@ -98,8 +98,9 @@ class DrawViewController: UIViewController {
             // set the button title
             sender.setTitle("Start", for: .normal)
             
-            // enable the Clear button
+            // enable the Clear & Share buttons
             contentView.clearButton.isEnabled = true
+            contentView.shareButton.isEnabled = true
 
         } else {
             // Start was tapped
@@ -120,8 +121,9 @@ class DrawViewController: UIViewController {
                 // set the button title
                 sender.setTitle("Stop", for: .normal)
                 
-                // disable the Clear button
+                // disable the Clear & Share buttons
                 contentView.clearButton.isEnabled = false
+                contentView.shareButton.isEnabled = false
             }
         }
     }
