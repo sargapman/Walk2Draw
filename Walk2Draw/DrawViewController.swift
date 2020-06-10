@@ -177,11 +177,13 @@ class DrawViewController: UIViewController {
         
         snapshot.image.draw(at: CGPoint(x: 0, y: 0))
         let bezierPath = UIBezierPath()
+        
+        // TODO: resolve problem of sometimes not including the entire path in the image.
 
         // for each collection of points in each segment
         for locations in segments {
             // get the start point of the path
-            guard let firstCoordinate = locations.first?.coordinate else { fatalError() }
+            guard let firstCoordinate = locations.first?.coordinate else { fatalError("imageByAddingSegments: no firstCoordinate") }
             
             
             // begin the path at that point
@@ -202,8 +204,10 @@ class DrawViewController: UIViewController {
         // draw the path
         bezierPath.stroke()
 
+        // TODO: add annotation images
+
         // get an image from the path
-        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { fatalError() }
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { fatalError("imageByAddingSegments: no image from context") }
         
         UIGraphicsEndImageContext()
         

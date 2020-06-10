@@ -15,6 +15,8 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
     private let locationManager: CLLocationManager
     private let updateHandler: (CLLocation?, Error?) -> Void
     
+    private static let locationResolution: Double = 5       // in meters
+    
     var locationsUpdating = false    // track state of getting location updates
     var locationPermissionDenied = false
     
@@ -30,7 +32,9 @@ class LocationProvider: NSObject,  CLLocationManagerDelegate {
         
         // this class is the delegate
         locationManager.delegate = self
-        locationManager.distanceFilter = 3      // get notified when the device has moved 3 meters
+        
+        // get notified when the device has moved
+        locationManager.distanceFilter = LocationProvider.locationResolution
         
         // ask for permission to get the device location
         locationManager.requestWhenInUseAuthorization()

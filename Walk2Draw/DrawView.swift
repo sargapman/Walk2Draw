@@ -87,7 +87,9 @@ class DrawView: UIView {
             annot.subtitle = "Segment \(segmentsCount)"
             mapView.addAnnotation(annot)
         }
-        
+
+        // TODO: resolve problem of sometimes not including the entire path in the region.
+
         // set a region on the map to include at least most of the locations
         if let lastLocation = locations.last {
             // find the max distance of all locations from the last location
@@ -98,10 +100,13 @@ class DrawView: UIView {
                 return max(result, distance)
             }
             
+            // extend the boundary a bit to keep the entire path in the region
+            let extendedMaxDistance = maxDistance * 1.2
+            
             // create and set a region based on max distance and the last location
             let region = MKCoordinateRegion(center: lastLocation.coordinate,
-                                            latitudinalMeters: maxDistance,
-                                            longitudinalMeters: maxDistance)
+                                            latitudinalMeters: extendedMaxDistance,
+                                            longitudinalMeters: extendedMaxDistance)
             mapView.setRegion(region, animated: true)
         }
     }
